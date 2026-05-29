@@ -1,0 +1,27 @@
+{
+  "name": "wonder-harness",
+  "owner": {
+    "name": "InHo Jeong",
+    "email": "inho.jeong@wonderit.kr"
+  },
+  "metadata": {
+    "description": "Claude Code 개발 하네스 단일 플러그인 마켓플레이스",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "wonder-harness",
+      "source": "./plugins/wonder-harness",
+      "description": "Claude Code 개발 하네스 — 프로젝트 워크플로우 최적화 플러그인",
+      "version": "0.1.0",
+      "category": "Productivity",
+      "tags": ["harness", "workflow", "optimization"],
+      "author": {
+        "name": "InHo Jeong",
+        "email": "inho.jeong@wonderit.kr"
+      },
+      "homepage": "https://github.com/Chigo55/wiki-optimizer",
+      "license": "MIT"
+    }
+  ]
+}
