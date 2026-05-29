@@ -5,7 +5,7 @@
   "description": "Claude Code 개발 하네스 단일 플러그인 마켓플레이스",
   "engines": { "node": ">=18.0.0" },
   "scripts": {
-    "test": "node --test tests/",
+    "test": "node --test",
     "validate": "claude plugin validate ./plugins/wonder-harness"
   },
   "license": "MIT"
