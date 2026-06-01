@@ -1,6 +1,6 @@
 {
   "name": "wonder-harness",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Spring Boot · MyBatis(SP) · Thymeleaf · Kendo 스택 도메인 개발 오케스트레이션 하네스 (planner·templater·developer·ruler 파이프라인)",
   "author": {
     "name": "InHo Jeong",
@@ -12,8 +12,6 @@
   "dependencies": [
     { "name": "superpowers", "marketplace": "claude-plugins-official" },
     { "name": "context7", "marketplace": "claude-plugins-official" },
-    { "name": "hookify", "marketplace": "claude-plugins-official" },
-    { "name": "plugin-dev", "marketplace": "claude-plugins-official" },
     { "name": "claude-md-management", "marketplace": "claude-plugins-official" },
     { "name": "code-simplifier", "marketplace": "claude-plugins-official" }
   ]
