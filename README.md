@@ -6,7 +6,7 @@
   </p>
   <p align="center">
     <img src="https://img.shields.io/badge/Claude_Code-plugin-blue?style=flat-square" alt="Claude Code Plugin">
-    <img src="https://img.shields.io/badge/version-0.5.0-orange?style=flat-square" alt="Version 0.5.0">
+    <img src="https://img.shields.io/badge/version-0.6.0-orange?style=flat-square" alt="Version 0.6.0">
     <img src="https://img.shields.io/badge/Node.js-18+-green?style=flat-square" alt="Node.js 18+">
     <img src="https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square" alt="MIT License">
   </p>
@@ -54,8 +54,6 @@ claude --plugin-dir ./wonder-harness/plugins/wonder-harness
 |----------|------|
 | `superpowers` | brainstorming · TDD · debugging 등 개발 워크플로우 스킬 |
 | `context7` | 라이브러리/프레임워크 최신 문서 조회 (MCP) |
-| `hookify` | 대화에서 훅 규칙 생성 |
-| `plugin-dev` | 플러그인 · 스킬 · 훅 개발 도구 |
 | `claude-md-management` | CLAUDE.md 감사 · 개선 |
 | `code-simplifier` | 코드 단순화 · 정리 |
 
@@ -74,7 +72,7 @@ wonder-harness/  (마켓플레이스 저장소)
   .claude-plugin/
     marketplace.json        ← 마켓플레이스 카탈로그
   plugins/
-    wonder-harness/         ← wonder-harness 플러그인 (v0.5.0)
+    wonder-harness/         ← wonder-harness 플러그인 (v0.6.0)
       .claude-plugin/
         plugin.json         ← 플러그인 매니페스트
       commands/             ← 슬래시 커맨드 (wh-create·wh-modify·wh-review)
