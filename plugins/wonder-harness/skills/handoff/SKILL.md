@@ -4,8 +4,11 @@ description: Compact the current conversation into a handoff document for anothe
 argument-hint: "What will the next session be used for?"
 ---
 
-Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to the
-temporary directory of the user's OS - not the current workspace.
+Write a handoff document summarising the current conversation so a fresh agent can continue the work.
+
+**저장 경로 결정 순서:**
+1. `CLAUDE.md` 에 handoff 저장 경로가 명시된 경우 → 해당 경로 사용
+2. 경로 없음 → OS 임시 디렉터리에 `wh-handoff-{timestamp}.md` 로 저장
 
 Include a "suggested skills" section in the document, which suggests skills that the agent should invoke.
 
