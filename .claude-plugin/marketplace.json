@@ -5,7 +5,7 @@
     "email": "inho.jeong@wonderit.kr"
   },
   "metadata": {
-    "description": "Claude Code 개발 하네스 단일 플러그인 마켓플레이스",
+    "description": "Single-plugin marketplace for the Claude Code development harness",
     "pluginRoot": "./plugins"
   },
   "allowCrossMarketplaceDependenciesOn": ["claude-plugins-official"],
@@ -13,8 +13,8 @@
     {
       "name": "wonder-harness",
       "source": "./plugins/wonder-harness",
-      "description": "Spring Boot · MyBatis(SP) · Thymeleaf · Kendo 스택 도메인 개발 오케스트레이션 하네스 (planner·templater·developer·ruler 파이프라인)",
-      "version": "0.6.0",
+      "description": "Domain development orchestration harness for Spring Boot · MyBatis(SP) · Thymeleaf · Kendo stack (planner·templater·developer·ruler pipeline)",
+      "version": "0.7.0",
       "category": "Productivity",
       "tags": ["harness", "workflow", "spring-boot", "mybatis", "thymeleaf", "kendo"],
       "author": {
