@@ -1,3 +1,4 @@
+// plugins/wonder-harness/hooks/scripts/lib/__tests__/init-guard.test.js
 'use strict';
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
@@ -102,5 +103,9 @@ describe('checkStepOrdering', () => {
   });
   it('returns null when state is null for unrelated paths', () => {
     assert.equal(checkStepOrdering('/project/src/Main.java', null), null);
+  });
+  it('blocks writing rules when state is null', () => {
+    const result = checkStepOrdering('/project/.claude/rules/backend.md', null);
+    assert.ok(result && result.deny);
   });
 });

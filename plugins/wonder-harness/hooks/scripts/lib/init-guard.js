@@ -1,6 +1,7 @@
 // plugins/wonder-harness/hooks/scripts/lib/init-guard.js
 'use strict';
 
+// Intentionally duplicated from state.js to keep this module dependency-free.
 const LAYERS = ['backend', 'frontend', 'security', 'templates'];
 
 function normalize(p) {
@@ -8,8 +9,7 @@ function normalize(p) {
 }
 
 function isClaudeInternal(filePath) {
-  const n = normalize(filePath);
-  return n.includes('/.claude/') || n.includes('\\.claude\\');
+  return normalize(filePath).includes('/.claude/');
 }
 
 function extractRulesLayer(filePath) {
