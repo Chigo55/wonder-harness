@@ -7,8 +7,7 @@ argument-hint: "(optional) Path to the request document. Default: .claude/reques
 
 ## 1. Acquire input
 - If an argument is provided, use that path; otherwise use `.claude/requests/create_request.md`.
-- If the file does not exist, copy the plugin seed `${CLAUDE_PLUGIN_ROOT}/requests/create_request.md` to that location,
-  instruct the user to fill in the form and re-run, then **stop**.
+- If the file does not exist, instruct the user to fill in `.claude/requests/create_request.md` and re-run, then **stop**.
 
 ## 2. Validation gate (fail-fast)
 Confirm that all required sections exist and contain non-empty content (excluding comments/placeholders):

@@ -7,7 +7,7 @@ argument-hint: "(optional) Path to the request document. Default: .claude/reques
 
 ## 1. Acquire input
 - If an argument is provided, use that path; otherwise use `.claude/requests/modify_request.md`.
-- If the file does not exist, copy the plugin seed `${CLAUDE_PLUGIN_ROOT}/requests/modify_request.md`, instruct the user, then **stop**.
+- If the file does not exist, instruct the user to fill in `.claude/requests/modify_request.md` and re-run, then **stop**.
 
 ## 2. Validation gate (fail-fast)
 Required sections: `## Target`, `## Changes`, `## Impact`, `## Acceptance Criteria`.

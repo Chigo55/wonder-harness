@@ -38,8 +38,6 @@ function checkCrossCommandGate(filePath, state) {
 }
 
 function checkStepOrdering(filePath, state) {
-  if (isClaudeInternal(filePath)) return null;
-
   const rulesLayer = extractRulesLayer(filePath);
   if (rulesLayer) {
     if (!state || !state.adr || state.adr[rulesLayer] === null) {
