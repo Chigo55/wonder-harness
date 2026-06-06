@@ -1,12 +1,12 @@
 <p align="center">
   <h1 align="center">wonder-harness</h1>
   <p align="center">
-    <strong>Spring Boot · MyBatis(SP) · Thymeleaf · Kendo 스택 도메인 개발 오케스트레이션 하네스</strong><br>
-    요청 → 계획 → 템플릿 탐색·축적 → 코드 구현 → 규칙 검증의 4단계 파이프라인을 제공하는 Claude Code 플러그인입니다.
+    <strong>Stack-agnostic 6-stage development orchestration harness for Claude Code</strong><br>
+    분석 → 조사 → 계획 → 구현 → 검사 → 수정의 6단계 파이프라인을 제공하는 Claude Code 플러그인입니다.
   </p>
   <p align="center">
     <img src="https://img.shields.io/badge/Claude_Code-plugin-blue?style=flat-square" alt="Claude Code Plugin">
-    <img src="https://img.shields.io/badge/version-0.6.0-orange?style=flat-square" alt="Version 0.6.0">
+    <img src="https://img.shields.io/badge/version-1.0.0-orange?style=flat-square" alt="Version 1.0.0">
     <img src="https://img.shields.io/badge/Node.js-18+-green?style=flat-square" alt="Node.js 18+">
     <img src="https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square" alt="MIT License">
   </p>
@@ -16,12 +16,12 @@
 
 ## 개요
 
-`wonder-harness`는 **Java 17 / Spring Boot 3.x / MyBatis(SQL Server 저장프로시저) / Thymeleaf / Kendo UI 웹컴포넌트 / Bootstrap 5 / ES6** 스택의 도메인·화면 개발을 오케스트레이션한다.
+`wonder-harness`는 스택에 종속되지 않는 **6단계 개발 파이프라인**을 Claude Code에 제공하는 오케스트레이션 하네스다.
 
-- **파이프라인**: planner(분해) → templater(템플릿 탐색·축적) → developer(구현) → ruler(규칙 검증)
-- **정체성**: 재사용 가능한 *메커니즘 + 회사표준 규칙*. 특정 프로젝트의 복제본이 아니다.
-- **규칙 5종**(ruler 소유): `backend` · `frontend` · `security` · `workflow` · `templates`
-- **템플릿 탐색 강제 훅**: 프로젝트 `index.json` 미탐색 상태의 `Write`/`Edit` 를 차단한다.
+- **파이프라인**: analyzer(분석) → researcher(조사) → planner(계획) → developer(구현) → inspector(검사) → modifier(수정)
+- **조율**: orchestrator 에이전트가 단계 간 흐름을 조율한다.
+- **검증**: ruler 에이전트가 backend · frontend · security · workflow 규칙에 대조 검증한다.
+- **단계 강제 훅**: 현재 파이프라인 단계를 벗어난 `Write`/`Edit` 를 차단한다.
 
 ---
 
@@ -46,9 +46,35 @@ claude --plugin-dir ./wonder-harness/plugins/wonder-harness
 
 ---
 
+## 커맨드
+
+| 커맨드 | 설명 |
+|--------|------|
+| `/wh-init` | 프로젝트 초기화 — ADR 역설계 + 상태 기록 + HTML 리포트 |
+| `/wh-run` | 6단계 파이프라인 단일 진입점 |
+| `/wh-review` | inspector 에이전트를 통한 독립 코드 리뷰 |
+| `/wh-rules` | ruler 규칙 수정(amend) 또는 감사(audit) |
+
+---
+
+## 에이전트
+
+| 에이전트 | 역할 | 단계 |
+|----------|------|------|
+| `orchestrator` | 파이프라인 전체 조율 | — |
+| `analyzer` | 요청 분석 · 범위 정의 | Stage 1 |
+| `researcher` | 라이브러리·패턴·선례 조사 | Stage 2 |
+| `planner` | 구현 계획 수립 | Stage 3 |
+| `developer` | 코드 구현 | Stage 4 |
+| `inspector` | 결과물 검사 | Stage 5 |
+| `modifier` | 검사 피드백 반영 수정 | Stage 6 |
+| `ruler` | 규칙 관리 및 최종 검증 | — |
+
+---
+
 ## 의존 플러그인
 
-`wonder-harness`는 아래 플러그인을 의존성으로 선언한다. 설치 시 자동으로 함께 설치되며, 활성화 시 같은 스코프에서 함께 활성화된다. 모두 공식 마켓플레이스 `claude-plugins-official` 에서 제공된다.
+설치 시 자동으로 함께 설치되며, 모두 공식 마켓플레이스 `claude-plugins-official` 에서 제공된다.
 
 | 플러그인 | 역할 |
 |----------|------|
@@ -72,15 +98,14 @@ wonder-harness/  (마켓플레이스 저장소)
   .claude-plugin/
     marketplace.json        ← 마켓플레이스 카탈로그
   plugins/
-    wonder-harness/         ← wonder-harness 플러그인 (v0.6.0)
+    wonder-harness/         ← wonder-harness 플러그인 (v1.0.0)
       .claude-plugin/
         plugin.json         ← 플러그인 매니페스트
-      commands/             ← 슬래시 커맨드 (wh-create·wh-modify·wh-review)
-      agents/               ← 격리 서브에이전트 (planner·templater·developer·ruler)
-      hooks/                ← 이벤트 훅 (템플릿 탐색 강제)
-      rules/                ← 하네스 규칙 (backend·frontend·security·workflow·templates)
-      templates/            ← index 스키마·시드 + scaffolds
-      requests/             ← 요청 양식 시드 (create_request·modify_request)
+      commands/             ← 슬래시 커맨드 (wh-init·wh-run·wh-review·wh-rules)
+      agents/               ← 에이전트 (orchestrator·analyzer·researcher·planner·developer·inspector·modifier·ruler)
+      hooks/                ← 이벤트 훅 (단계 강제)
+      rules/                ← 하네스 규칙 (backend·frontend·security·workflow)
+      requests/             ← 요청 양식 시드
       skills/               ← SKILL.md 스킬 (grill-me·handoff·write-a-skill)
   package.json              ← 모노레포 루트
   CLAUDE.md
