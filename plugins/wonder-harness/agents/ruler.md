@@ -184,3 +184,118 @@ HEALTHY: N | CONFLICT: N | STALE: N | MISSING: N
 
 {Actionable list: which rules to amend, which ADRs to update}
 ```
+
+---
+
+# Template-Promote Mode
+
+Invoked by `/wh-template promote`. Parses template candidates from a run's work-doc and promotes selected ones to the catalog.
+
+## Inputs
+
+- Path to `work-doc.md` (from `/wh-template`)
+- `${CLAUDE_PLUGIN_ROOT}/templates/index.json`
+
+## Process
+
+1. **Parse candidates** — read `work-doc.md`. Find every line containing `[TEMPLATE CANDIDATE]`. Extract the pattern description and tags for each. Display as a numbered list:
+   ```
+   Template candidates found:
+   1. {pattern description} — tags: {tags}
+   2. ...
+   ```
+2. **User selection** — ask: "Which candidates would you like to promote? (comma-separated numbers, or 'all', or 'none')"
+3. **Draft templates** — for each selected candidate, generate a `{id}.md` draft:
+   - `id`: kebab-case slug derived from first tag + a short keyword from the pattern description
+   - Populate Context, Pattern (code snippet if present in the candidate, else prose), and Notes sections
+   - Present draft to user for review
+4. **Write on approval** — for each approved draft:
+   - Write `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`
+   - Append to `${CLAUDE_PLUGIN_ROOT}/templates/index.json`:
+     ```json
+     {
+       "id": "{id}",
+       "name": "{name}",
+       "tags": [{tags}],
+       "description": "{one-line description}",
+       "source": "{codebase|external}",
+       "addedFrom": "{run-id derived from work-doc.md path}"
+     }
+     ```
+5. Report: "Promoted {N} template(s): {id-list}"
+
+---
+
+# Template-Add Mode
+
+Invoked by `/wh-template add`. Interactively collects a new template from the user.
+
+## Process
+
+1. Ask: "Template name?"
+2. Ask: "Tags? (comma-separated, e.g. java, spring, repository)"
+3. Ask: "Source — codebase or external?"
+4. Ask: "Paste the pattern (code snippet or prose)."
+5. Ask: "Any notes or caveats?"
+6. Draft `{id}.md` with collected info (`id` = kebab-slug of name). Present for review.
+7. On approval, write `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md` and append entry to `${CLAUDE_PLUGIN_ROOT}/templates/index.json`.
+8. Report: "Template '{id}' added."
+
+## Template File Format
+
+```markdown
+---
+id: {id}
+name: {name}
+tags: [{tags}]
+source: {codebase|external}
+---
+
+## Context
+{When and why to use this pattern — 1-2 sentences.}
+
+## Pattern
+{code block or prose — ≤ 30 lines of code; use {{PlaceholderName}} for variable parts}
+
+## Notes
+{Edge cases, caveats, or known variations. Omit section if none.}
+```
+
+---
+
+# Template-Edit Mode
+
+Invoked by `/wh-template edit <id>`. Modifies an existing template.
+
+## Inputs
+
+- Template id (from `/wh-template`)
+- `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`
+- `${CLAUDE_PLUGIN_ROOT}/templates/index.json`
+
+## Process
+
+1. Read `scaffolds/{id}.md` and display current content.
+2. Ask: "What would you like to change?"
+3. Apply the requested change to the draft.
+4. Present before/after for the modified sections.
+5. On approval, write the updated `scaffolds/{id}.md`.
+6. If frontmatter fields (name, tags, description, source) changed, update the matching entry in `index.json`.
+7. Report: "Template '{id}' updated."
+
+---
+
+# Template-Delete Mode
+
+Invoked by `/wh-template delete <id>`. Removes a template from the catalog.
+
+## Inputs
+
+- Template id (from `/wh-template`)
+
+## Process
+
+1. Read `${CLAUDE_PLUGIN_ROOT}/templates/index.json` to get the template's name.
+2. Delete `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`.
+3. Remove the entry with matching `id` from `index.json` and write the updated file.
+4. Report: "Template '{id}' deleted."
