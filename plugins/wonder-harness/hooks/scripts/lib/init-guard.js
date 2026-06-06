@@ -2,7 +2,7 @@
 'use strict';
 
 // Intentionally duplicated from state.js to keep this module dependency-free.
-const LAYERS = ['backend', 'frontend', 'security', 'templates'];
+const LAYERS = ['backend', 'frontend', 'security'];
 
 function normalize(p) {
   return String(p || '').replace(/\\/g, '/');
@@ -13,13 +13,13 @@ function isClaudeInternal(filePath) {
 }
 
 function extractRulesLayer(filePath) {
-  const m = normalize(filePath).match(/\/\.claude\/rules\/(backend|frontend|security|templates)\.md$/);
+  const m = normalize(filePath).match(/\/\.claude\/rules\/(backend|frontend|security)\.md$/);
   return m ? m[1] : null;
 }
 
 function extractReportLayer(filePath) {
   const m = normalize(filePath).match(
-    /\/\.claude\/reports\/wh-init-(backend|frontend|security|templates)-\d{8}-\d{6}\.html$/
+    /\/\.claude\/reports\/wh-init-(backend|frontend|security)-\d{8}-\d{6}\.html$/
   );
   return m ? m[1] : null;
 }

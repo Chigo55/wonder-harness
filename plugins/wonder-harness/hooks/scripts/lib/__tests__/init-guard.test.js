@@ -49,9 +49,9 @@ describe('extractReportLayer', () => {
     const p = '/project/.claude/reports/wh-init-backend-20260605-100500.html';
     assert.equal(extractReportLayer(p), 'backend');
   });
-  it('extracts templates from report path', () => {
-    const p = '/project/.claude/reports/wh-init-templates-20260605-123456.html';
-    assert.equal(extractReportLayer(p), 'templates');
+  it('extracts security from report path', () => {
+    const p = '/project/.claude/reports/wh-init-security-20260605-123456.html';
+    assert.equal(extractReportLayer(p), 'security');
   });
   it('returns null for non-report html files', () => {
     assert.equal(extractReportLayer('/project/.claude/reports/other.html'), null);
