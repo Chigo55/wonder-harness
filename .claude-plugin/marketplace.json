@@ -13,10 +13,10 @@
     {
       "name": "wonder-harness",
       "source": "./plugins/wonder-harness",
-      "description": "Domain development orchestration harness for Spring Boot · MyBatis(SP) · Thymeleaf · Kendo stack (planner·templater·developer·ruler pipeline)",
-      "version": "0.7.1",
+      "description": "Stack-agnostic 6-stage development framework for Claude Code (analysis · research · planning · implementation · inspection · modification)",
+      "version": "1.0.0",
       "category": "Productivity",
-      "tags": ["harness", "workflow", "spring-boot", "mybatis", "thymeleaf", "kendo"],
+      "tags": ["harness", "workflow", "stack-agnostic", "6-stage", "analysis", "planning"],
       "author": {
         "name": "InHo Jeong",
         "email": "inho.jeong@wonderit.kr"
