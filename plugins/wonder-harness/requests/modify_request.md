@@ -1,4 +1,4 @@
-<!-- wonder-harness modify request form. /wh-modify validates that the required sections below are present.
+<!-- wonder-harness modify request form. /wh-run validates that the required sections below are present.
      Required sections: ## Target, ## Changes, ## Impact, ## Acceptance Criteria -->
 
 # Modify Request

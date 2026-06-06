@@ -1,4 +1,4 @@
-<!-- wonder-harness create request form. /wh-create validates that the required sections below are present.
+<!-- wonder-harness create request form. /wh-run validates that the required sections below are present.
      Required sections: ## Goal, ## Scope, ## Constraints, ## Acceptance Criteria -->
 
 # Create Request
