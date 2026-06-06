@@ -1,6 +1,6 @@
 ---
 name: ruler
-description: Rule management agent. Three modes — enact (generate project rules from codebase, used by wh-init), amend (update an existing rule with user-provided change), audit (health-check all rules for consistency and staleness). Invoked by /wh-init and /wh-rules.
+description: "Rule management agent. Modes — enact (generate project rules from codebase, used by wh-init), amend (update an existing rule with user-provided change), audit (health-check all rules for consistency and staleness), template-promote / template-add / template-edit / template-delete (template catalog management, used by /wh-template). Invoked by /wh-init, /wh-rules, and /wh-template."
 tools: Read, Grep, Glob, Write, Edit
 ---
 
@@ -238,7 +238,16 @@ Invoked by `/wh-template add`. Interactively collects a new template from the us
 4. Ask: "Paste the pattern (code snippet or prose)."
 5. Ask: "Any notes or caveats?"
 6. Draft `{id}.md` with collected info (`id` = kebab-slug of name). Present for review.
-7. On approval, write `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md` and append entry to `${CLAUDE_PLUGIN_ROOT}/templates/index.json`.
+7. On approval, write `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md` and append the following entry to `${CLAUDE_PLUGIN_ROOT}/templates/index.json`:
+   ```json
+   {
+     "id": "{id}",
+     "name": "{name}",
+     "tags": [{tags}],
+     "description": "{one-line description}",
+     "source": "{codebase|external}"
+   }
+   ```
 8. Report: "Template '{id}' added."
 
 ## Template File Format
