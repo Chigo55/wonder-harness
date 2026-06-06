@@ -31,7 +31,10 @@ The current wonder-harness is tightly coupled to the Spring Boot + MyBatis + Thy
 wonder-harness (framework)
 │
 ├── /wh-init          ← Project initialization (once per project)
-│     └── ruler       → generates .claude/rules/ from codebase analysis
+│     └── ruler       → enact mode: generates .claude/rules/ from codebase analysis
+│
+├── /wh-rules         ← On-demand rule management (any time)
+│     └── ruler       → amend mode: update a rule | audit mode: health check all rules
 │
 ├── /wh-run           ← Development task entry point (per task)
 │     └── orchestrator
@@ -113,9 +116,16 @@ All development tasks follow this fixed sequence:
 - **Input:** `inspection-report.md`
 - **Output:** `modification-report.md` (prioritized fix list) + delegates fixes to developer
 
-### ruler (init only)
-- Used exclusively by `/wh-init`
-- Analyzes codebase → generates ADRs → generates `.claude/rules/` files
+### ruler (rule manager)
+- Invoked automatically by `/wh-init` and on-demand via `/wh-rules`
+- **Modes:**
+  - `enact` — analyze codebase, infer ADRs, generate `.claude/rules/{layer}.md` (used by wh-init)
+  - `amend` — receive a change request, update an existing rule file, record change rationale
+  - `audit` — review all `.claude/rules/` files for consistency, conflicts, and staleness; produce a rule health report
+- **Input (enact):** codebase source + meta-rule from plugin
+- **Input (amend):** existing rule file + change description from user
+- **Input (audit):** all `.claude/rules/` files + `.claude/adr/` files
+- **Output:** `.claude/rules/{layer}.md`, `.claude/adr/{layer}.md`, rule-report (HTML or markdown)
 
 ---
 
@@ -232,9 +242,10 @@ In both cases, the orchestrator asks clarifying questions before starting the pi
 
 | Command | Role |
 |---------|------|
-| `/wh-init` | Project initialization; generates `.claude/rules/` |
+| `/wh-init` | Project initialization; generates `.claude/rules/` via ruler (enact mode) |
 | `/wh-run` | Run the 6-stage development pipeline |
 | `/wh-review` | Re-run inspection only against an existing run-id |
+| `/wh-rules` | On-demand rule management via ruler (amend / audit mode) |
 
 **Plugin structure (after redesign):**
 
@@ -248,11 +259,12 @@ plugins/wonder-harness/
 │   ├── developer.md      ← rewrite
 │   ├── inspector.md      ← new (replaces ruler in pipeline)
 │   ├── modifier.md       ← new
-│   └── ruler.md          ← retain (wh-init only; not part of wh-run pipeline)
+│   └── ruler.md          ← expand (wh-init + /wh-rules; enact·amend·audit modes)
 ├── commands/
 │   ├── wh-init.md        ← rewrite
 │   ├── wh-run.md         ← new (replaces wh-create + wh-modify)
-│   └── wh-review.md      ← retain
+│   ├── wh-review.md      ← retain
+│   └── wh-rules.md       ← new (on-demand rule management)
 ├── hooks/                ← rewrite (stage-based file permission enforcement)
 ├── rules/                ← rewrite (stack-agnostic meta-rules)
 └── requests/             ← retain (create_request, modify_request)
