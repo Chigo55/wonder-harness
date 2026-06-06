@@ -56,6 +56,14 @@ describe('state.js v2', () => {
     const result = readState(dir);
     assert.equal(result.requests_copied, true);
     assert.equal(result.version, 2);
+    assert.deepEqual(result.current, { command: null, 'run-id': null, stage: null });
+  });
+
+  it('writeState creates .claude directory if it does not exist', () => {
+    const dir = fs.mkdtempSync(path.join(tmpDir, 'mkdir-'));
+    // dir exists but has no .claude subdirectory
+    writeState(dir, s => s);
+    assert.ok(fs.existsSync(path.join(dir, '.claude', '.wh-state.json')));
   });
 
   it('writeState can update current.stage via nested spread', () => {
