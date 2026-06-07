@@ -3,7 +3,7 @@
 A single-plugin marketplace for the Claude Code development harness (stack-agnostic 6-stage framework).
 
 > Stages: analysis · research · planning · implementation · inspection · modification.
-> Includes agents (analyzer·developer·inspector·modifier·orchestrator·planner·researcher·ruler), commands (wh-init·wh-review·wh-rules·wh-run), rules (backend·frontend·security·workflow), and skills (caveman·grill-me·handoff·write-a-skill).
+> Includes agents (analyzer·developer·inspector·modifier·orchestrator·planner·researcher·ruler), commands (wh-init·wh-review·wh-rules·wh-run), rules (backend·frontend·security·workflow), and skills (cave-man·grill-me·hand-off·write-a-skill).
 
 ## Development Commands
 
@@ -35,7 +35,7 @@ root/                           ← marketplace repository
   │           ├── rules/        ← harness rules (backend·frontend·security·workflow·templates)
   │           ├── templates/    ← template scaffold + index schema·seed
   │           ├── requests/     ← request form seeds (create_request·modify_request)
-  │           └── skills/       ← SKILL.md skills (caveman·grill-me·handoff·write-a-skill)
+  │           └── skills/       ← SKILL.md skills (cave-man·grill-me·hand-off·write-a-skill)
   │
   ├── CLAUDE.md                 ← this file
   └── package.json              ← monorepo root

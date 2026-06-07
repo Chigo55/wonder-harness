@@ -109,7 +109,7 @@ wonder-harness/  (마켓플레이스 저장소)
       rules/                ← 하네스 규칙 (backend·frontend·security·workflow·templates)
       templates/            ← 템플릿 카탈로그 (index.json + scaffolds/)
       requests/             ← 요청 양식 시드
-      skills/               ← SKILL.md 스킬 (grill-me·handoff·write-a-skill)
+      skills/               ← SKILL.md 스킬 (grill-me·hand-off·write-a-skill)
   package.json              ← 모노레포 루트
   CLAUDE.md
 ```
