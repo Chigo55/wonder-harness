@@ -40,7 +40,7 @@ Synthesize codebase patterns and external references into actionable findings.
 
 Review all findings from Steps 1–2. For each pattern that meets a criterion below, append `**[TEMPLATE CANDIDATE]** tags: {relevant-tags}` directly after the pattern entry:
 
-- **Codebase**: pattern appears in ≥ 2 distinct files
+- **Codebase**: pattern meets the replication threshold defined in `.claude/rules/templates.md` (e.g., appears in ≥ 2 or 3 distinct files depending on project size)
 - **External**: directly reusable across future tasks (recurring API shape, configuration block, call pattern)
 
 Mark sparingly. Fewer, high-value candidates are better than many noisy ones.
@@ -81,4 +81,4 @@ Append to `.claude/runs/{run-id}/work-doc.md`, replacing `## Research` placehold
 - Do not write to any file other than `work-doc.md` during this stage.
 - Do not propose implementation steps — that is planner's role.
 - Research scope must be limited to what §Analysis identified as needed.
-- Mark template candidates only when ≥ 2 files criterion (codebase) or clear reuse value (external) is met.
+- Mark template candidates only when codebase threshold (from `.claude/rules/templates.md`) or clear reuse value (external) is met.
