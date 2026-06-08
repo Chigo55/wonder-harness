@@ -1,6 +1,6 @@
 ---
 description: On-demand rule management. Use 'amend' to update a project rule, 'audit' to health-check all rules.
-argument-hint: "amend [--backend|--frontend|--security] | audit"
+argument-hint: "amend [<layer>] | audit"
 ---
 
 # /wh-rules
@@ -8,7 +8,7 @@ argument-hint: "amend [--backend|--frontend|--security] | audit"
 ## Parse mode
 
 Read the argument:
-- `amend [--backend|--frontend|--security]`: rule amendment mode. If no layer flag, ask the user which layer to amend.
+- `amend [<layer>]`: rule amendment mode (e.g. amend security, amend templates, or a custom active layer). If no layer argument is provided, ask the user which active layer to amend.
 - `audit`: rule audit mode.
 - No argument or unrecognized: display usage and stop.
 

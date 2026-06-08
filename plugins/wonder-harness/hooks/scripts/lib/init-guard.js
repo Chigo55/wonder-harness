@@ -1,9 +1,6 @@
 // plugins/wonder-harness/hooks/scripts/lib/init-guard.js
 'use strict';
 
-// Intentionally duplicated from state.js to keep this module dependency-free.
-const LAYERS = ['backend', 'frontend', 'security'];
-
 function normalize(p) {
   return String(p || '').replace(/\\/g, '/');
 }
@@ -13,13 +10,13 @@ function isClaudeInternal(filePath) {
 }
 
 function extractRulesLayer(filePath) {
-  const m = normalize(filePath).match(/\/\.claude\/rules\/(backend|frontend|security)\.md$/);
+  const m = normalize(filePath).match(/\/\.claude\/rules\/([a-zA-Z0-9_-]+)\.md$/);
   return m ? m[1] : null;
 }
 
 function extractReportLayer(filePath) {
   const m = normalize(filePath).match(
-    /\/\.claude\/reports\/wh-init-(backend|frontend|security)-\d{8}-\d{6}\.html$/
+    /\/\.claude\/reports\/wh-init-([a-zA-Z0-9_-]+)-\d{8}-\d{6}\.html$/
   );
   return m ? m[1] : null;
 }
@@ -30,7 +27,7 @@ function checkCrossCommandGate(filePath, state) {
   if (!state) {
     return { deny: true, reason: 'wonder-harness has not been initialized. Run /wh-init first.' };
   }
-  const hasAnyRules = LAYERS.some(l => state.rules && state.rules[l] !== null);
+  const hasAnyRules = state.rules && Object.keys(state.rules).some(l => state.rules[l] !== null);
   if (!hasAnyRules) {
     return { deny: true, reason: 'No layer has been fully initialized. Run /wh-init [--layer] first.' };
   }
@@ -70,3 +67,4 @@ module.exports = {
   extractRulesLayer,
   extractReportLayer
 };
+

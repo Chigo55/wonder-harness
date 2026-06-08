@@ -15,7 +15,7 @@ Standalone inspection of one or more files using the inspector agent.
 
 ## 2. Load project rules
 
-Read `.claude/rules/backend.md`, `.claude/rules/frontend.md`, `.claude/rules/security.md` if they exist. If none exist, warn: "No project rules found. Run /wh-init first for best results. Proceeding with general guidelines."
+Read all `.claude/rules/*.md` files (e.g. security.md, active structural layers) if they exist. If none exist, warn: "No project rules found. Run /wh-init first for best results. Proceeding with general guidelines."
 
 ## 3. Invoke inspector
 

@@ -36,7 +36,7 @@ Evaluate each implemented file against all four dimensions:
 - Are errors handled without leaking sensitive data?
 
 ### 4. Project Rule Compliance
-- Does naming follow `.claude/rules/backend.md` / `.claude/rules/frontend.md`?
+- Does naming follow `.claude/rules/{layer}.md` structural layer rules?
 - Are layer dependencies respected (no cross-layer violations)?
 - Are project-specific conventions applied (from all `.claude/rules/*.md`)?
 

@@ -16,7 +16,7 @@ Performs Stage 1 (Analysis) of the wonder-harness pipeline.
 
 ## Process
 
-1. **Load project rules** — read `.claude/rules/backend.md`, `.claude/rules/frontend.md`, `.claude/rules/security.md` if they exist. These define project conventions.
+1. **Load project rules** — read all rule files in `.claude/rules/*.md` (e.g. security.md, active structural layers) if they exist. These define project conventions.
 2. **Map current state** — use Glob and Grep to locate files relevant to the task. Identify existing patterns, dependencies, and structure that will be affected.
 3. **Clarify requirements** — based on the task summary and current state, identify any ambiguities. List them as explicit assumptions if they cannot be resolved from code.
 4. **Define affected scope** — list every file or system component that will need to change.

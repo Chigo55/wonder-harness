@@ -6,11 +6,11 @@ tools: Read, Grep, Glob, Write, Edit
 
 # ruler
 
-Owner of the 5 rule documents (`${CLAUDE_PLUGIN_ROOT}/rules/*.md` — backend · frontend · security · workflow · templates).
+Owner of the rule documents (`${CLAUDE_PLUGIN_ROOT}/rules/*.md` — structure · security · templates) and coordinator of target project rules under `.claude/rules/`.
 
 ## Modes
-- **adr-extract**: Reverse-engineer Architecture Decision Records from project source. Writes `.claude/adr/{layer}.md`. Invoked by `wh-init` Step 1.
-- **generate**: Generate a project-specific rule in `.claude/rules/` from a meta-rule and the layer's ADR. Invoked by `wh-init` Step 2.
+- **adr-extract**: Reverse-engineer Architecture Decision Records from project source for a specific declared layer. Writes `.claude/adr/{layer}.md`. Invoked by `wh-init` Step 1.
+- **generate**: Generate a project-specific rule in `.claude/rules/{layer}.md` from a meta-rule and the layer's ADR. Invoked by `wh-init` Step 2.
 - **amend**: Update an existing project rule with a user-provided change, verified against ADR. Invoked by `/wh-rules amend`.
 - **audit**: Health-check all rules for consistency and staleness. Invoked by `/wh-rules audit`.
 
@@ -18,10 +18,10 @@ Owner of the 5 rule documents (`${CLAUDE_PLUGIN_ROOT}/rules/*.md` — backend ·
 
 # ADR-Extract Mode
 
-Invoked by `wh-init` as Step 1 for each selected layer.
+Invoked by `wh-init` as Step 1 for each active layer.
 
 ## Inputs
-- Layer name: `backend` | `frontend` | `security` | `templates`
+- Layer name: arbitrary structural layer (e.g. `core`, `interface`, `state`, etc.) or cross-cutting layer (`security` | `templates`).
 - Project source files (explored via Glob and Grep)
 
 ## Process
@@ -67,17 +67,17 @@ Report: "`{layer}` ADR written to `.claude/adr/{layer}.md` ({N} decisions record
 
 # Generate Mode
 
-Invoked by `wh-init` for each selected layer (`--backend`, `--frontend`, `--security`, `--templates`).
+Invoked by `wh-init` for each active layer (`--layers` or automatic scan).
 
 ## Inputs
-- Meta-rule: `${CLAUDE_PLUGIN_ROOT}/rules/{layer}.md`
+- Meta-rule: `${CLAUDE_PLUGIN_ROOT}/rules/structure.md` (for custom structural layers) or `${CLAUDE_PLUGIN_ROOT}/rules/{layer}.md` (for `security` and `templates`)
 - ADR: `.claude/adr/{layer}.md` — **required**; if absent, abort and instruct user to run Step 1 (adr-extract) first
 - Project code: existing source files in the current working directory
 
 ## Process
 
 ### Step 1 — Load Meta-Rule
-Read `${CLAUDE_PLUGIN_ROOT}/rules/{layer}.md`. Identify:
+If layer is structural (not `security` or `templates`), read `${CLAUDE_PLUGIN_ROOT}/rules/structure.md`. Otherwise, read the corresponding meta-rule. Identify:
 - **Required Sections** — the sections the generated rule must contain
 - **Exploration Guide** — what to look for in the project's existing code per section
 
@@ -122,7 +122,7 @@ Invoked by `/wh-rules amend` when the user wants to update an existing project r
 
 ## Inputs
 
-- Layer name: `backend` | `frontend` | `security`
+- Layer name: arbitrary active layer (e.g. `core`, `security`, etc.)
 - Change description (from user): what should change and why
 
 ## Process
@@ -177,7 +177,7 @@ HEALTHY: N | CONFLICT: N | STALE: N | MISSING: N
 
 | Layer | Section | Issue Type | Detail |
 |-------|---------|------------|--------|
-| backend | Naming | STALE | References pattern not found in codebase |
+| {layer} | Naming | STALE | References pattern not found in codebase |
 ...
 
 ## Recommendations

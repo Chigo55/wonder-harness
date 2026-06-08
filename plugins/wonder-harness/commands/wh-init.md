@@ -1,23 +1,23 @@
 ---
 description: Initializes wonder-harness for a project — copies request seeds, reverse-engineers ADRs, generates project-specific rules, and produces HTML reports. Run once per project before using /wh-run.
-argument-hint: "[--backend] [--frontend] [--security] — omit all flags to initialize all layers"
+argument-hint: "[--layers <layer1,layer2...>] — e.g. --layers core-logic,security,templates"
 ---
 
 # /wh-init
 
-Initializes wonder-harness on a new project through three mandatory steps executed in order for each selected layer.
+Initializes wonder-harness on a new project through three mandatory steps executed in order for each active layer.
 
 ## 0. Parse flags and copy request seeds
 
-Read arguments for `--backend`, `--frontend`, `--security`.
-If no flags provided, treat all three layers as selected.
+Read arguments for `--layers` (comma-separated list of active layers, e.g. `--layers core-logic,security,templates`).
+If no flags are provided, auto-detect the project structure and ask the user which active layers to initialize (defaulting to `security` and `templates`).
 
 Copy request seeds (runs once, before the layer loop):
 - This is handled automatically by the `SessionStart` hook (`init-requests.js`).
 - Verify `.claude/requests/create_request.md` exists.
 - If missing, run: `node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/init-requests.js` via the Bash tool with `{"cwd": "<project_cwd>"}` on stdin.
 
-## 1–3. For each selected layer (sequentially)
+## 1–3. For each active layer (sequentially)
 
 Process layers one at a time. For each layer:
 
@@ -44,7 +44,7 @@ Replace `{layer}` with the actual layer name and `<ISO-timestamp>` with the curr
 Invoke **ruler** in **enact mode (generate step)** for the layer.
 
 Ruler will:
-1. Load the meta-rule from `${CLAUDE_PLUGIN_ROOT}/rules/{layer}.md`
+1. Load the meta-rule from `${CLAUDE_PLUGIN_ROOT}/rules/structure.md` (for custom structural layers) or `${CLAUDE_PLUGIN_ROOT}/rules/{layer}.md` (for `security` and `templates`).
 2. Load `.claude/adr/{layer}.md` (required — ruler will abort if absent)
 3. Draft the project-specific rule, cross-referencing ADR constraints
 4. Present extracted conventions and any ADR conflicts to the user
@@ -114,17 +114,18 @@ node "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/write-state.js" "<cwd>" "reports.{laye
 
 ## 4. Result Report
 
-After all selected layers are processed, output:
+After all active layers are processed, output:
 
 ```
 wh-init complete.
 
 Generated:
-  ✓ backend  — .claude/adr/backend.md, .claude/rules/backend.md, .claude/reports/wh-init-backend-YYYYMMDD-HHMMSS.html
+  ✓ {layer-name-1} — .claude/adr/{layer-name-1}.md, .claude/rules/{layer-name-1}.md, .claude/reports/wh-init-{layer-name-1}-YYYYMMDD-HHMMSS.html
+  ✓ {layer-name-2} — ...
   ...
 
 Skipped:
-  — frontend  (already existed, user chose skip)
+  — {layer-name-3} (already existed, user chose skip)
   ...
 
 Next step: Run /wh-run to start a development task.

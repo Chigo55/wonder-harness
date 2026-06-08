@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 
-const { readState, writeState, emptyState, LAYERS, PIPELINE_STAGES } = require('../state.js');
+const { readState, writeState, emptyState, PIPELINE_STAGES } = require('../state.js');
 
 describe('state.js v2', () => {
   let tmpDir;
@@ -29,9 +29,9 @@ describe('state.js v2', () => {
     assert.ok(!('wh-modify' in s));
   });
 
-  it('LAYERS does not include templates', () => {
-    assert.ok(!LAYERS.includes('templates'));
-    assert.deepEqual(LAYERS, ['backend', 'frontend', 'security']);
+  it('emptyState default layers include security and templates', () => {
+    const s = emptyState();
+    assert.deepEqual(Object.keys(s.rules), ['security', 'templates']);
   });
 
   it('PIPELINE_STAGES matches 6-stage workflow in order', () => {
