@@ -84,7 +84,7 @@ Present the inspection-report summary to the user. Ask:
 
 ## Final Summary
 
-After completing the pipeline:
+After completing the pipeline, scan `.claude/runs/{run-id}/work-doc.md` for `[TEMPLATE CANDIDATE]` markers. Output the final summary:
 
 ```
 wonder-harness run complete: {run-id}
@@ -96,6 +96,10 @@ Deliverables:
   🔧 .claude/runs/{run-id}/modification-report.md  (if Stage 6 ran)
 
 Inspection result: PASS N | VIOLATION N | WARNING N
+
+[If any [TEMPLATE CANDIDATE] markers were found in work-doc.md, append this reminder:]
+💡 Evolution Reminder: N template candidate(s) were marked during this run.
+   Run `/wh-template promote` to save them into your catalog and grow the framework!
 ```
 
 Reset state: command=null, run-id=null, stage=null.

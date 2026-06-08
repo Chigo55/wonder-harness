@@ -18,10 +18,10 @@ Performs Stage 2 (Research) of the wonder-harness pipeline.
 
 ### Step 0 — Template Lookup
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/templates/index.json`. If the file does not exist or the `templates` array is empty, skip to Step 1.
+1. Read the Local template index `.claude/templates/index.json` and the Global template index `${CLAUDE_PLUGIN_ROOT}/templates/index.json`. Merge the two catalogs into a single list (Local templates override Global templates if they share the same ID). If both catalogs are absent or empty, skip to Step 1.
 2. Extract task keywords from §Analysis (technology names, pattern types, layer names, and other task-specific nouns).
-3. For each template entry in the index, check whether any of its `tags` match the extracted keywords.
-4. For each match, read `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`.
+3. For each template entry in the merged index, check whether any of its `tags` match the extracted keywords.
+4. For each match, read the corresponding `scaffolds/{id}.md` file from the catalog directory it was resolved from (local first, then global).
 5. Embed matched templates in §Research under **Available templates** (see Deliverable). If no templates match, omit the **Available templates** section entirely.
 
 ### Step 1 — Codebase Patterns

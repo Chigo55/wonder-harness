@@ -194,7 +194,8 @@ Invoked by `/wh-template promote`. Parses template candidates from a run's work-
 ## Inputs
 
 - Path to `work-doc.md` (from `/wh-template`)
-- `${CLAUDE_PLUGIN_ROOT}/templates/index.json`
+- `${CLAUDE_PLUGIN_ROOT}/templates/index.json` (Global Catalog)
+- `.claude/templates/index.json` (Local Catalog - optional, created on first local promote)
 
 ## Process
 
@@ -205,13 +206,15 @@ Invoked by `/wh-template promote`. Parses template candidates from a run's work-
    2. ...
    ```
 2. **User selection** — ask: "Which candidates would you like to promote? (comma-separated numbers, or 'all', or 'none')"
-3. **Draft templates** — for each selected candidate, generate a `{id}.md` draft:
+3. **Scope selection** — ask: "Promote to 'local' (this project only) or 'global' (shared across all projects) catalog? (local / global)" — **strongly recommend and default to 'local'** for project-specific evolutionary growth.
+4. **Draft templates** — for each selected candidate, generate a `{id}.md` draft:
    - `id`: kebab-case slug derived from first tag + a short keyword from the pattern description
    - Populate Context, Pattern (code snippet if present in the candidate, else prose), and Notes sections
    - Present draft to user for review
-4. **Write on approval** — for each approved draft:
-   - Write `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`
-   - Append to `${CLAUDE_PLUGIN_ROOT}/templates/index.json`:
+5. **Write on approval** — for each approved draft:
+   - Determine target directory: `<cwd>/.claude/templates/` (for local) or `${CLAUDE_PLUGIN_ROOT}/templates/` (for global).
+   - Write `{target_dir}/scaffolds/{id}.md`.
+   - Append to `{target_dir}/index.json` (initialize with empty list `{ "name": "...", "plugins": [] }` format or simple array if missing):
      ```json
      {
        "id": "{id}",
@@ -222,7 +225,7 @@ Invoked by `/wh-template promote`. Parses template candidates from a run's work-
        "addedFrom": "{run-id derived from work-doc.md path}"
      }
      ```
-5. Report: "Promoted {N} template(s): {id-list}"
+6. Report: "Promoted {N} template(s) to {local|global} catalog: {id-list}"
 
 ---
 
@@ -233,22 +236,25 @@ Invoked by `/wh-template add`. Interactively collects a new template from the us
 ## Process
 
 1. Ask: "Template name?"
-2. Ask: "Tags? (comma-separated, e.g. java, spring, repository)"
+2. Ask: "Tags? (comma-separated, e.g. js, node, cli)"
 3. Ask: "Source — codebase or external?"
-4. Ask: "Paste the pattern (code snippet or prose)."
-5. Ask: "Any notes or caveats?"
-6. Draft `{id}.md` with collected info (`id` = kebab-slug of name). Present for review.
-7. On approval, write `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md` and append the following entry to `${CLAUDE_PLUGIN_ROOT}/templates/index.json`:
-   ```json
-   {
-     "id": "{id}",
-     "name": "{name}",
-     "tags": [{tags}],
-     "description": "{one-line description}",
-     "source": "{codebase|external}"
-   }
-   ```
-8. Report: "Template '{id}' added."
+4. Ask: "Target scope — local (this project) or global (shared)? (local / global)" — **default to 'local'**.
+5. Ask: "Paste the pattern (code snippet or prose)."
+6. Ask: "Any notes or caveats?"
+7. Draft `{id}.md` with collected info (`id` = kebab-slug of name). Present for review.
+8. On approval:
+   - Determine target directory: `<cwd>/.claude/templates/` (for local) or `${CLAUDE_PLUGIN_ROOT}/templates/` (for global).
+   - Write `{target_dir}/scaffolds/{id}.md` and append entry to `{target_dir}/index.json`:
+    ```json
+    {
+      "id": "{id}",
+      "name": "{name}",
+      "tags": [{tags}],
+      "description": "{one-line description}",
+      "source": "{codebase|external}"
+    }
+    ```
+9. Report: "Template '{id}' added to {local|global} catalog."
 
 ## Template File Format
 
@@ -279,18 +285,18 @@ Invoked by `/wh-template edit <id>`. Modifies an existing template.
 ## Inputs
 
 - Template id (from `/wh-template`)
-- `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`
-- `${CLAUDE_PLUGIN_ROOT}/templates/index.json`
+- Searches local `.claude/templates/scaffolds/{id}.md` first, then global `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`
 
 ## Process
 
-1. Read `scaffolds/{id}.md` and display current content.
-2. Ask: "What would you like to change?"
-3. Apply the requested change to the draft.
-4. Present before/after for the modified sections.
-5. On approval, write the updated `scaffolds/{id}.md`.
-6. If frontmatter fields (name, tags, description, source) changed, update the matching entry in `index.json`.
-7. Report: "Template '{id}' updated."
+1. Locate the template. If it exists in both scopes, ask the user: "Edit in local or global scope? (local / global)".
+2. Read the target `scaffolds/{id}.md` and display current content.
+3. Ask: "What would you like to change?"
+4. Apply the requested change to the draft.
+5. Present before/after for the modified sections.
+6. On approval, write the updated `scaffolds/{id}.md` in the resolved scope directory.
+7. If frontmatter fields (name, tags, description, source) changed, update the matching entry in that scope's `index.json`.
+8. Report: "Template '{id}' updated in {local|global} scope."
 
 ---
 
@@ -304,7 +310,9 @@ Invoked by `/wh-template delete <id>`. Removes a template from the catalog.
 
 ## Process
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/templates/index.json` to get the template's name.
-2. Delete `${CLAUDE_PLUGIN_ROOT}/templates/scaffolds/{id}.md`.
-3. Remove the entry with matching `id` from `index.json` and write the updated file.
-4. Report: "Template '{id}' deleted."
+1. Locate the template scope. If in both, ask: "Delete from local or global scope? (local / global / both)".
+2. For each selected scope (local and/or global):
+   - Delete `{scope_dir}/templates/scaffolds/{id}.md`.
+   - Remove the entry with matching `id` from `{scope_dir}/templates/index.json` and write the updated file.
+3. Report: "Template '{id}' deleted from {local|global|both} scope."
+
